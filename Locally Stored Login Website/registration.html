@@ -1,0 +1,100 @@
+<head>
+  <!--Tab Header-->
+  <title>Registration</title>
+</head>
+
+<body>
+
+  <body style=background-color:#7c7c7c>
+    <div>
+      <ul id="listuser">
+        <font size="+3">
+          <center>
+            <h3> We're Glad You Decided to Join Us!</h3>
+          </center>
+        </font>
+      </ul>
+    </div>
+    <font size="+2">
+      <center>Please enter your desired login information: </center>
+      <form onsubmit="return false">
+        <div class="container">
+          <center><label for="username"><b>Email:</b></label>
+            <input type="text" placeholder="Enter Email" id="usernameReg" name="uname" required>
+          </center>
+          <center><label for="password"><b>Password:</b></label>
+            <input type="password" placeholder="Enter Password" id="passwordReg" name="psw" required>
+          </center>
+          <center><button type="submit" onclick="Login()">Register!</button></center>
+
+        </div>
+        <center>Already Have an Account? <a href="signIn.html">Log In Here</a>!</center>
+
+      </form>
+  </body>
+  </font>
+
+
+  <script type="text/javascript">
+    
+ 
+ //Called when the user presses the register button
+    function Login() {
+      var storedEmails;
+      var storedPasswords;
+      var u = 0;
+      var register = false;
+      var storeTemp = [];
+
+      //If there are no records of emails, make a new array.
+      //If there are records, get the list.
+      if (localStorage.getItem("loginEmails") == null) {
+        storedEmails = [];
+      } else {
+        storedEmails = JSON.parse(localStorage.getItem("loginEmails"));
+      }
+
+      //Same as above, but with passwords.
+      if (localStorage.getItem("loginPasswords") == null) {
+        storedPasswords = [];
+      } else {
+        storedPasswords = JSON.parse(localStorage.getItem("loginPasswords"));
+      }
+
+      //Get the values of what the user entered
+      var username = document.getElementById("usernameReg").value;
+      var password = document.getElementById("passwordReg").value;
+
+      //If the text boxes are not empty, do the following.
+      if (username != "" && password != "") {
+        //Store the username in a temporary array.
+        storeTemp.push(username);
+
+        //Check to see if the email is already registered.
+        while (storeTemp[u] != null) {
+          if (storedEmails[u] == username) {
+            alert("This email is already registered!");
+            register = false;
+            break;
+          } else {
+            register = true;
+          }
+          u++;
+        }
+
+        //If the email is available, add the email and password
+        //to the respective arrays, and store it locally.
+        //Then change pages.
+        if (register == true) {
+          storedEmails.push(username);
+          storedPasswords.push(password);
+          localStorage.setItem("loginEmails", JSON.stringify(storedEmails));
+          localStorage.setItem("loginPasswords", JSON.stringify(storedPasswords));
+          alert("Registered!");
+          location.href = "signIn.html"
+        }
+      } else {
+        alert("Please make sure both text boxes contain at least one character!");
+      }
+    }
+  </script>
