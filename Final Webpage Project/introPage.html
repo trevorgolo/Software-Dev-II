@@ -1,0 +1,186 @@
+<!DOCTYPE html <head>
+<title>Home Page</title>
+<link rel="icon" href="DID.png">  
+</head>
+<style>
+  body {
+    background-color: white;
+  }
+
+  h1 {
+    color: black;
+  }
+
+  p {
+    color: black;
+  }
+</style>
+
+<body style=background-color:#7c7c7c>
+  </head>
+  <font size="+2.5">
+    <h1>
+      <center>Welcome,
+        <script>
+          if (localStorage.getItem("email") == null)
+            document.write("User");
+          else {
+            var email = localStorage.getItem("email");
+            document.write(email);
+          }
+          
+        </script>!
+      </center>
+    </h1>
+  </font>
+
+  <body>
+    <font size="+2">
+      <center>
+        <p>We're glad to have you!</p>
+      </center>
+      <form action="signIn.html">
+        <center><label for="username"><b>Change Balance: </b></label></center>
+        <center><input type="text" placeholder="Enter Balance" id="inputBalance" name="uname" ;
+            this.style.backgroundColor='#00FF00'> </center>
+        <center><input type="button" value="Add Balance" onclick="add()" style=background-color:green /> <input
+            type="button" value="Withdraw Balance" onclick="withdraw()" style=background-color:red /></center>
+        <center><input type="button" value="Log Out" onclick=location.href="login.html" ; /></center>
+    </font>
+    </form>
+  </body>
+
+  <!--Format for the email at the top right of the page-->
+  <style type="text/css">
+    #topright {
+      position: absolute;
+      right: 100;
+      top: 0;
+      display: block;
+      height: 125px;
+      width: 125px;
+      text-decoration: none;
+    }
+  </style>
+
+  <a id="topright" title="TopRight">
+
+    <script>
+      document.write(email);
+    </script>
+  </a>
+  <font size="+2">
+    <a>
+
+      <body>
+        <script>
+          //Grab the list of emails
+          var storedEmails = JSON.parse(localStorage.getItem("loginEmails"));
+          var u = 0;
+          var email = localStorage.getItem("email");
+
+          //If there are records of balances, grab them. If
+          //not, make a list.
+          if (localStorage.getItem("tradingBalances") == null) {
+            var storedBalances = [];
+          } else {
+            storedBalances = JSON.parse(localStorage.getItem("tradingBalances"));
+          }
+          document.write("Balances of Registered Users:")
+
+          //Write the list of currently registered users and
+          //their balance. If their balance has not been
+          //set, make it 0.
+          while (storedEmails[u] != null) {
+            document.write("<pre>");
+            if (storedBalances[u] == null) {
+              document.write(storedEmails[u] + ": $" + 0 + " USD");
+            } else {
+              document.write(storedEmails[u] + ": $" + storedBalances[u] + " USD");
+            }
+            document.write("</pre>");
+            u++;
+          }
+          u = 0;
+
+          //If a user presses the Add Balance button, execute the following
+          function add() {
+            //Grab what they entered
+            var inputBalance = document.getElementById("inputBalance").value;
+            //Convert it into a number.
+            inputBalance = parseFloat(inputBalance);
+            //If it is a number, execute the following. If not,
+            //don't accept it.
+            if (Number.isFinite(inputBalance)) {
+              //Run through the list of emails and find where this
+              //user is located in the list.
+              while (storedEmails[u] != null) {
+                if (storedEmails[u] == email) {
+                  if (storedBalances[u] == null) {
+                    //If they had no previous balance, make their input
+                    //the new balance.
+                    storedBalances[u] = inputBalance;
+                  } else {
+                    //If they had a previous balance, add to it.
+                    storedBalances[u] = parseFloat(storedBalances[u]) + parseFloat(inputBalance);
+                  }
+                  //Reduce/increase the balance to 2 decimal places
+                  storedBalances[u] = storedBalances[u].toFixed(2);
+                  //Store the updated list of balances
+                  localStorage.setItem("tradingBalances", JSON.stringify(storedBalances));
+                  u = 0;
+                  //Reload the page and tell them their balance was updated.
+                  location.reload();
+                  alert("Balance updated!");
+                  break;
+                }
+                u++;
+              }
+            } else {
+              alert("Please enter a valid number")
+            }
+          }
+
+          //If the user presses the Withdraw Balance button, execute the following:
+          function withdraw() {
+            //Grab what the user entered
+            var inputBalance = document.getElementById("inputBalance").value;
+            //Convert their input into a number
+            inputBalance = parseFloat(inputBalance);
+            //If they entered a number, execute the following.
+            if (Number.isFinite(inputBalance)) {
+              //Run through the email list and find where they
+              //are located in the list.
+              while (storedEmails[u] != null) {
+                if (storedEmails[u] == email) {
+                  //If they had no previous balance, keep it at 0.
+                  if (storedBalances[u] == null) {
+                    storedBalances[u] = inputBalance;
+                  } else {
+                    //If they have enough money, subtract their
+                    //input from the current balance, and 
+                    //round to the nearest 2 decimals.
+                    //Then store it.
+                    if (parseFloat(storedBalances[u]) >= parseFloat(inputBalance)) {
+                      storedBalances[u] = parseFloat(storedBalances[u]) - parseFloat(inputBalance);
+                      storedBalances[u] = storedBalances[u].toFixed(2);
+                      localStorage.setItem("tradingBalances", JSON.stringify(storedBalances));
+                      alert("Balance updated!");
+                      location.reload();
+                    } else {
+                      alert("You do not have sufficient funds!")
+                    }
+                  }
+                  u = 0;
+                  break;
+                }
+                u++;
+              }
+            } else {
+              alert("Please enter a valid number")
+            }
+          }
+        </script>
+    </a>
+  </font>
+</body>

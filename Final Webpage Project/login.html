@@ -1,0 +1,87 @@
+<!DOCTYPE html>    
+<html>    
+<head>    
+    <title>DID Login Form</title>    
+    <link rel="stylesheet" type="text/css" href="format.css">   
+    <link rel="icon" href="DID.png">   
+</head>    
+<body>    
+    <h2>DID Login</h2><br>    
+    <div class="login">    
+    <form id="login" method="get" action="login.php">    
+        <label><b>Email    
+        </b>    
+        </label>    
+        <input type="text" name="Email" id="usernameInput" placeholder="Email" autocomplete = "off" required>    
+        <br><br>    
+        <label><b>Password     
+        </b>    
+        </label>    
+        <input type="Password" name="Pass" id="passwordInput" placeholder="Password" required>    
+        <br><br>    
+        <input type="button" id="log" value="Log In" onclick="javascript:Login()">
+        <br><br>  
+        <center>Don't Have an Account? <a href="registration.html">Register Here</a></center>
+    </form>     
+</div>    
+</body>    
+</html>     
+
+<script type="text/javascript">
+
+    function Login() {
+        var u = 0;
+        var p = 0;
+        var usernameCheck = false;
+        var passwordCheck = false;
+
+        //Get the values of what the user entered.
+        var userInput = document.getElementById("usernameInput").value;
+        var passInput = document.getElementById("passwordInput").value;
+
+        //Grab the lists of emails and passwords.
+        var name = JSON.parse(localStorage.getItem("loginEmails"));
+        var pass = JSON.parse(localStorage.getItem("loginPasswords"));
+
+        if (JSON.parse(localStorage.getItem("loginEmails") == null)) {
+                alert("There are currently no accounts registered.")
+            } else {
+                //If the text boxes are not empty, execute the following
+                if (userInput != "" && passInput != "") {
+                    while (name[u] != null && pass[p] != null && usernameCheck == false) {
+                        //If the entered email is found in the email list, 
+                        //make usernameCheck true. Otherwise, keep looking
+                        if (name[u] == userInput) {
+                            usernameCheck = true;
+                        } else {
+                            u++;
+                        }
+                        //If the entered password is found in the list, 
+                        //make passwordCheck true. Otherwise, keep looking
+                        if (pass[p] == passInput) {
+                            passwordCheck = true;
+                        } else {
+                            p++;
+                        }
+                    }
+
+                    //If a username and password for found in the system,
+                    //check if they are for the same account. If they
+                    //are, execute the code. If not, tell the user
+                    //the credentials are wrong.
+                    if (usernameCheck == true && passwordCheck == true && u == p) {
+                        alert('Login successful');
+                        //Store the email in the local machine for the next page.
+                        var currentLogged = name[u];
+                        localStorage.setItem("email", currentLogged);
+                        //Change pages
+                        location.href = "introPage.html"
+                    } else {
+                        alert("Incorrect username/password combination. Please try again.");
+                    }
+                } else {
+                    alert("Please make sure both text boxes contain at least one character!");
+                }
+            }
+        }
+</script>
